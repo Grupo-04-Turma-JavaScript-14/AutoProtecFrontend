@@ -1,10 +1,11 @@
-import { ArrowRight, Shield, Users, ShieldCheck } from "lucide-react"
+import { ArrowRight, Shield, Users, ShieldCheck } from "lucide-react";
+import logo from "../../public/images/autoprotecseguros.png";
 
 const stats = [
   { icon: Shield, value: "+15", label: "Anos de Experiência" },
   { icon: Users, value: "+50K", label: "Clientes Protegidos" },
   { icon: ShieldCheck, value: "100%", label: "Compromisso com sua Segurança" },
-]
+];
 
 export default function About() {
   return (
@@ -12,47 +13,18 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Mosaico de imagens */}
+
           <div className="relative">
             <div
               className="absolute -top-6 -left-6 h-32 w-32 opacity-30"
               style={{
-                backgroundImage: "radial-gradient(circle, #1E5BFF 1px, transparent 1px)",
+                backgroundImage:
+                  "radial-gradient(circle, #1E5BFF 1px, transparent 1px)",
                 backgroundSize: "10px 10px",
               }}
               aria-hidden="true"
             />
-
-            <div className="relative grid grid-cols-2 gap-3">
-              <div className="rounded-2xl overflow-hidden border border-border row-span-2">
-                <img
-                  src="/images/about-person.jpg"
-                  alt="Consultor de seguros AutoProtect sorrindo, pronto para atender"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="rounded-2xl overflow-hidden border border-border">
-                <img
-                  src="/images/about-dealership.jpg"
-                  alt="Fachada da concessionária parceira AutoProtect Seguros"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="rounded-2xl overflow-hidden border border-border">
-                <img
-                  src="/images/cta-car.jpg"
-                  alt="Carro premium segurado pela AutoProtect"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            <div className="absolute -bottom-4 left-6 bg-surface-2 border border-border rounded-xl px-5 py-3 flex items-center gap-3 shadow-xl">
-              <Shield className="h-6 w-6 text-primary" />
-              <div className="leading-tight">
-                <div className="text-white font-bold text-sm">+15 ANOS</div>
-                <div className="text-muted text-[10px] tracking-widest">DE EXPERIÊNCIA</div>
-              </div>
-            </div>
+            <img src={logo} alt="" />
           </div>
 
           {/* Conteúdo */}
@@ -65,9 +37,9 @@ export default function About() {
               <br />A NOSSA <span className="text-accent">MISSÃO.</span>
             </h2>
             <p className="mt-6 text-muted leading-relaxed max-w-xl">
-              A AutoProtect Seguros nasceu com o propósito de oferecer segurança inteligente,
-              atendimento humano e soluções modernas para proteger o que realmente importa: você
-              e seu patrimônio.
+              A AutoProtect Seguros nasceu com o propósito de oferecer segurança
+              inteligente, atendimento humano e soluções modernas para proteger
+              o que realmente importa: você e seu patrimônio.
             </p>
 
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -76,7 +48,9 @@ export default function About() {
                   <div className="h-11 w-11 rounded-full border border-border flex items-center justify-center text-primary mb-3">
                     <s.icon className="h-5 w-5" />
                   </div>
-                  <div className="text-2xl font-extrabold text-white">{s.value}</div>
+                  <div className="text-2xl font-extrabold text-white">
+                    {s.value}
+                  </div>
                   <div className="text-xs text-muted leading-tight mt-1 max-w-[140px]">
                     {s.label}
                   </div>
@@ -95,5 +69,5 @@ export default function About() {
         </div>
       </div>
     </section>
-  )
+  );
 }

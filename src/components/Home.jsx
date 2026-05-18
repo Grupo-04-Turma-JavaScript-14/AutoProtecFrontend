@@ -1,16 +1,27 @@
-import { ArrowRight, Clock, Shield, MapPin, Award, ShieldCheck, Headphones, Car, BadgeDollarSign } from "lucide-react"
-
+import {
+  ArrowRight,
+  Clock,
+  Shield,
+  MapPin,
+  Award,
+  ShieldCheck,
+  Headphones,
+  Car,
+  BadgeDollarSign,
+} from "lucide-react";
+import logo from "../../public/images/content3.png";
 const trust = [
   { icon: Clock, title: "ATENDIMENTO", value: "24 HORAS" },
   { icon: Shield, title: "COBERTURA", value: "NACIONAL" },
   { icon: Award, title: "ASSISTÊNCIA", value: "PREMIUM" },
-]
+];
 
 const benefits = [
   {
     icon: ShieldCheck,
     title: "PROTEÇÃO COMPLETA",
-    description: "Coberturas completas para colisões, roubos, furtos e danos a terceiros.",
+    description:
+      "Coberturas completas para colisões, roubos, furtos e danos a terceiros.",
   },
   {
     icon: Headphones,
@@ -25,9 +36,10 @@ const benefits = [
   {
     icon: BadgeDollarSign,
     title: "MELHOR CUSTO-BENEFÍCIO",
-    description: "Planos personalizados cabendo no seu bolso e na sua necessidade.",
+    description:
+      "Planos personalizados cabendo no seu bolso e na sua necessidade.",
   },
-]
+];
 
 export default function Hero() {
   return (
@@ -46,7 +58,8 @@ export default function Hero() {
                 TE LEVA <span className="text-accent">MAIS LONGE.</span>
               </h1>
               <p className="mt-6 text-muted text-base lg:text-lg max-w-md leading-relaxed">
-                Tecnologia, segurança e cobertura premium para quem exige tranquilidade todos os dias.
+                Tecnologia, segurança e cobertura premium para quem exige
+                tranquilidade todos os dias.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
@@ -86,11 +99,14 @@ export default function Hero() {
             </div>
 
             <div className="relative">
-              <div className="absolute -inset-10 bg-primary/20 blur-3xl rounded-full" aria-hidden="true" />
+              <div
+                className="absolute -inset-10 bg-primary/20 blur-3xl rounded-full"
+                aria-hidden="true"
+              />
               <img
-                src="/images/hero-car.jpg"
+                src={logo}
                 alt="Carro esportivo preto protegido por escudo de segurança digital"
-                className="relative w-full h-auto rounded-lg"
+                className="relative rounded-lg "
                 loading="eager"
               />
             </div>
@@ -103,7 +119,10 @@ export default function Hero() {
         <div className="bg-surface/80 border border-border/60 rounded-xl p-6 lg:p-8 backdrop-blur">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
             {benefits.map((b) => (
-              <div key={b.title} className="px-6 py-6 sm:py-2 flex flex-col items-center text-center">
+              <div
+                key={b.title}
+                className="px-6 py-6 sm:py-2 flex flex-col items-center text-center"
+              >
                 <div className="h-12 w-12 rounded-full border border-border flex items-center justify-center text-primary mb-4">
                   <b.icon className="h-5 w-5" />
                 </div>
@@ -119,5 +138,5 @@ export default function Hero() {
         </div>
       </div>
     </section>
-  )
+  );
 }

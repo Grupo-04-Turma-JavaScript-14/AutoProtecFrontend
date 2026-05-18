@@ -1,17 +1,17 @@
-import { useState } from "react"
-import { Link, NavLink } from "react-router-dom"
-import { Menu, X, ArrowRight } from "lucide-react"
-import Logo from "./Logo.jsx"
+import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { Menu, X, ArrowRight } from "lucide-react";
+import Logo from "./Logo.jsx";
 
-const links = [
+export const links = [
   { label: "HOME", to: "/" },
   { label: "SOBRE NÓS", to: "/sobre" },
   { label: "SEGUROS", to: "/seguros" },
   { label: "CONTATO", to: "/contato" },
-]
+];
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-background/85 backdrop-blur-md border-b border-border/40">
@@ -21,7 +21,10 @@ export default function Navbar() {
             <Logo />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-10" aria-label="Navegação principal">
+          <nav
+            className="hidden lg:flex items-center gap-10"
+            aria-label="Navegação principal"
+          >
             {links.map((link) => (
               <NavLink
                 key={link.to}
@@ -76,7 +79,9 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
                   `block px-3 py-3 text-sm font-semibold tracking-wider rounded transition-colors ${
-                    isActive ? "text-white bg-surface-2" : "text-muted hover:text-white hover:bg-surface"
+                    isActive
+                      ? "text-white bg-surface-2"
+                      : "text-muted hover:text-white hover:bg-surface"
                   }`
                 }
               >
@@ -94,5 +99,5 @@ export default function Navbar() {
         )}
       </div>
     </header>
-  )
+  );
 }
