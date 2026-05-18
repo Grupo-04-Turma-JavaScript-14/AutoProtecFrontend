@@ -1,5 +1,5 @@
 import { ArrowRight, Shield, Users, ShieldCheck } from "lucide-react";
-import logo from "../../public/images/autoprotecseguros.png";
+const logo = "/images/autoprotecseguros.png";
 
 const stats = [
   { icon: Shield, value: "+15", label: "Anos de Experiência" },

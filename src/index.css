@@ -4,7 +4,7 @@
 
 html,
 body {
-  background-color: #050b1f;
+  background-color: #01030a;
   color: #ffffff;
 }
 
@@ -18,7 +18,7 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a1230;
+  background: #01030a;
 }
 ::-webkit-scrollbar-thumb {
   background: #1e5bff;
@@ -39,4 +39,26 @@ body {
 }
 .card-glow-red {
   box-shadow: 0 0 0 1px rgba(255, 44, 44, 0.4), 0 0 40px -10px rgba(255, 44, 44, 0.5);
+}
+
+/* Cyber CRT TV Monitor Texture & Noise */
+.crt-overlay {
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
+  background-size: 100% 4px, 6px 100%;
+}
+
+.crt-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.022;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+.crt-flicker-anim {
+  animation: crt-flicker 0.15s infinite;
 }

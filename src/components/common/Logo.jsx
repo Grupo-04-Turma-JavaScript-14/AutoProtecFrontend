@@ -1,5 +1,5 @@
 import { Shield } from "lucide-react";
-import logo from "../../public/images/content3.png";
+const logo = "/images/content3.png";
 
 export default function Logo({ className = "" }) {
   return (
