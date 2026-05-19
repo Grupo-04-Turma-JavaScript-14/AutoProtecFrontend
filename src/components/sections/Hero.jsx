@@ -3,8 +3,15 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <section className="relative min-h-[92vh] w-full flex items-center justify-center overflow-hidden bg-transparent py-20 lg:py-28 px-4 sm:px-6 lg:px-8">
+    <section id="home" className="relative min-h-[92vh] w-full flex items-center justify-center overflow-hidden bg-transparent py-20 lg:py-28 px-4 sm:px-6 lg:px-8">
       {/* Futuristic Grid Overlay */}
       <div 
         className="absolute inset-0 z-[1] opacity-[0.03] pointer-events-none"
@@ -53,7 +60,8 @@ export default function Hero() {
           >
             <button
               type="button"
-              className="group relative inline-flex items-center justify-center gap-3 bg-white text-black hover:bg-transparent hover:text-white border border-white px-9 py-4.5 text-[10px] font-black tracking-[0.25em] transition-all duration-300 active:scale-95 shadow-[0_4px_25px_rgba(255,255,255,0.1)]"
+              onClick={() => scrollToSection("contato")}
+              className="group relative inline-flex items-center justify-center gap-3 bg-white text-black hover:bg-transparent hover:text-white border border-white px-9 py-4.5 text-[10px] font-black tracking-[0.25em] transition-all duration-300 active:scale-95 shadow-[0_4px_25px_rgba(255,255,255,0.1)] focus:outline-none"
             >
               FAZER COTAÇÃO
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -61,7 +69,8 @@ export default function Hero() {
             
             <button
               type="button"
-              className="group inline-flex items-center justify-center gap-3 border border-white/10 hover:border-white/30 bg-transparent text-white text-[10px] font-black tracking-[0.25em] px-9 py-4.5 transition-all duration-300 active:scale-95 hover:bg-white/[0.02]"
+              onClick={() => scrollToSection("seguros")}
+              className="group inline-flex items-center justify-center gap-3 border border-white/10 hover:border-white/30 bg-transparent text-white text-[10px] font-black tracking-[0.25em] px-9 py-4.5 transition-all duration-300 active:scale-95 hover:bg-white/[0.02] focus:outline-none"
             >
               CONHECER PLANOS
             </button>
@@ -76,6 +85,9 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
             className="w-full max-w-md aspect-square pointer-events-auto flex flex-col items-center justify-center relative overflow-visible group"
           >
+            {/* Background 3D Radial Glow Backdrop */}
+            <div className="absolute w-[400px] h-[400px] rounded-full bg-primary/10 blur-[100px] pointer-events-none -z-25" />
+
             {/* Orbit 1: Outer Rotating Ring */}
             <motion.div
               animate={{ rotate: 360 }}
@@ -127,7 +139,6 @@ export default function Hero() {
                 COBERTURA AUTOMOTIVA ELITE
               </div>
             </motion.div>
-
 
           </motion.div>
         </div>

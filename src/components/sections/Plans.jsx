@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck } from "lucide-react";
+import { playHoverSound } from "../layout/Navbar";
 
 const plans = [
   {
@@ -81,8 +82,15 @@ const cardVariants = {
 export default function Plans() {
   const [activeDot, setActiveDot] = useState(0);
 
+  const handleScrollToQuote = () => {
+    const el = document.getElementById("contato");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <section className="py-20 lg:py-28 relative z-10 bg-transparent">
+    <section id="seguros" className="py-20 lg:py-28 relative z-10 bg-transparent">
       {/* Decorative top section neon line divider (Improvement 6) */}
       <div className="absolute top-0 left-10 right-10 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
@@ -126,7 +134,8 @@ export default function Plans() {
                     ? "0 20px 40px rgba(255,44,44,0.15)" 
                     : "0 20px 40px rgba(30,91,255,0.15)",
                 }}
-                className={`relative overflow-hidden aspect-[3/4] border rounded-xl flex flex-col justify-between p-7 transition-all duration-300 group bg-black/55 backdrop-blur-xl shadow-2xl ${
+                onMouseEnter={playHoverSound}
+                className={`relative overflow-hidden aspect-[3/4] border rounded-xl flex flex-col justify-between p-7 transition-all duration-300 group bg-[#0A1230]/55 backdrop-blur-xl shadow-2xl ${
                   isRed 
                     ? "hover:border-accent/40 border-white/10" 
                     : "hover:border-primary/40 border-white/10"
@@ -185,7 +194,8 @@ export default function Plans() {
                   {/* High-end button slide hover transition */}
                   <button
                     type="button"
-                    className={`group/btn relative inline-flex items-center justify-between gap-2 w-full text-white text-[10px] font-black tracking-[0.2em] px-6 py-4.5 border border-white/10 bg-white/[0.02] overflow-hidden transition-all duration-300 rounded-none uppercase`}
+                    onClick={handleScrollToQuote}
+                    className={`group/btn relative inline-flex items-center justify-between gap-2 w-full text-white text-[10px] font-black tracking-[0.2em] px-6 py-4.5 border border-white/10 bg-white/[0.02] overflow-hidden transition-all duration-300 rounded-none uppercase focus:outline-none`}
                     aria-label={`Cotar agora ${plan.type} ${plan.name}`}
                   >
                     <span className={`absolute inset-0 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 z-0 ${
@@ -210,7 +220,7 @@ export default function Plans() {
               type="button"
               onClick={() => setActiveDot(i)}
               aria-label={`Ir para slide ${i + 1}`}
-              className={`h-2 rounded-full transition-all ${
+              className={`h-2 rounded-full transition-all focus:outline-none ${
                 activeDot === i ? "w-8 bg-primary" : "w-2 bg-white/10"
               }`}
             />

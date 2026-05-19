@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Loader2, CheckCircle } from "lucide-react";
+import { playHoverSound } from "../layout/Navbar";
 
 const STEPS = [
   "SEC: DECRYPTING REGIONAL SHIELD NODES [AES-256]...",
@@ -42,7 +43,7 @@ export default function CTA() {
 
   const handleConsult = (e) => {
     e.preventDefault();
-    if (!plate || plate.trim().length < 7) {
+    if (!plate || plate.trim().replace("-", "").length !== 7) {
       setStatus("error");
       return;
     }
@@ -50,14 +51,14 @@ export default function CTA() {
   };
 
   return (
-    <section className="py-20 lg:py-28 relative z-10 bg-transparent">
+    <section id="contato" className="py-20 lg:py-28 relative z-10 bg-transparent">
       {/* Decorative top section neon line divider (Improvement 6) */}
       <div className="absolute top-0 left-10 right-10 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Mainframe Interactive Console container */}
-        <div className="relative overflow-hidden bg-black/55 border border-white/10 backdrop-blur-xl rounded-2xl p-8 lg:p-14 shadow-[0_30px_80px_rgba(0,0,0,0.8)]">
+        <div className="relative overflow-hidden bg-[#0A1230]/55 border border-white/10 backdrop-blur-xl rounded-2xl p-8 lg:p-14 shadow-[0_30px_80px_rgba(0,0,0,0.8)]">
           {/* Cyber TV overlay lines inside the console */}
           <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[linear-gradient(rgba(18,16,16,0)_50%,_rgba(0,0,0,0.25)_50%),_linear-gradient(90deg,_rgba(255,0,0,0.06),_rgba(0,255,0,0.02),_rgba(0,0,255,0.06))] bg-[size:100%_4px,_6px_100%]" />
           
@@ -131,7 +132,7 @@ export default function CTA() {
                         <div className="mt-2 flex justify-center items-center">
                           <input
                             type="text"
-                            maxLength={7}
+                            maxLength={8}
                             placeholder="ABC1D23"
                             value={plate}
                             onChange={(e) => setPlate(e.target.value.toUpperCase())}
@@ -142,13 +143,14 @@ export default function CTA() {
 
                       {status === "error" && (
                         <p className="text-xs text-red-500 font-bold text-center animate-bounce">
-                          Por favor, digite uma placa válida!
+                          Por favor, digite uma placa válida com 7 caracteres!
                         </p>
                       )}
 
                       <button
                         type="submit"
-                        className="group w-full inline-flex items-center justify-between bg-primary hover:bg-primary/90 text-white text-[10px] font-black tracking-[0.2em] px-6 py-4.5 transition-all duration-300 rounded-none uppercase"
+                        onMouseEnter={playHoverSound}
+                        className="group w-full inline-flex items-center justify-between bg-primary hover:bg-primary/90 text-white text-[10px] font-black tracking-[0.2em] px-6 py-4.5 transition-all duration-300 rounded-none uppercase focus:outline-none"
                       >
                         CONSULTAR APÓLICE
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -179,13 +181,16 @@ export default function CTA() {
                       <div className="space-y-1">
                         <h4 className="text-lg font-black text-white uppercase tracking-wider">APÓLICE CALCULADA!</h4>
                         <p className="text-xs text-gray-400 font-semibold leading-relaxed">
-                          Sua proposta premium foi calculada com 100% de sucesso.
+                          Sua proposta premium foi calculada com 100% de sucesso. Entraremos em contato em breve!
                         </p>
                       </div>
                       <button
                         type="button"
-                        onClick={() => setStatus("idle")}
-                        className="mt-3 text-[9px] font-black tracking-widest text-primary hover:text-white uppercase transition-colors"
+                        onClick={() => {
+                          setStatus("idle");
+                          setPlate("");
+                        }}
+                        className="mt-3 text-[9px] font-black tracking-widest text-primary hover:text-white uppercase transition-colors focus:outline-none"
                       >
                         Realizar Nova Simulação
                       </button>

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { Menu, X, ArrowRight, Shield, Radio, Activity, Volume2, VolumeX } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Menu, X, ArrowRight, Shield, Radio, Volume2, VolumeX } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../common/Logo.jsx";
 
 export const links = [
-  { label: "HOME", to: "/" },
-  { label: "SOBRE NÓS", to: "/sobre" },
-  { label: "SEGUROS", to: "/seguros" },
-  { label: "CONTATO", to: "/contato" },
+  { label: "HOME", to: "home" },
+  { label: "SOBRE NÓS", to: "sobre" },
+  { label: "SEGUROS", to: "seguros" },
+  { label: "CONTATO", to: "contato" },
 ];
 
 // Web Audio API Context and nodes (global state)
@@ -114,6 +114,16 @@ export default function Navbar() {
   const [ping, setPing] = useState(0.04);
   const [utcTime, setUtcTime] = useState("00:00:00 UTC");
 
+  // Scroll spy active section state
+  const [activeSection, setActiveSection] = useState("home");
+
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   // Monitor scroll to transform navbar state
   useEffect(() => {
     const handleScroll = () => {
@@ -121,6 +131,37 @@ export default function Navbar() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Intersection Observer for Scroll Spy
+  useEffect(() => {
+    const sectionIds = ["home", "sobre", "seguros", "contato"];
+    const observerOptions = {
+      root: null,
+      rootMargin: "-30% 0px -50% 0px",
+      threshold: 0.15,
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.unobserve(el);
+      });
+    };
   }, []);
 
   // Fluctuating network latency simulator
@@ -151,7 +192,6 @@ export default function Navbar() {
       playSuccessSound();
     };
     const handleAutoToggle = () => {
-      // Dispatch toggle Audio directly inside context
       toggleAudio();
     };
     window.addEventListener("play-success-sound", handleSuccessAudio);
@@ -251,56 +291,59 @@ export default function Navbar() {
             
             {/* Logo & Network Status Widget */}
             <div className="flex items-center gap-4 relative z-50">
-              <Link to="/" aria-label="AutoProtect Seguros - Home">
+              <button 
+                onClick={() => scrollToSection("home")} 
+                aria-label="AutoProtect Seguros - Home"
+                className="text-left focus:outline-none"
+              >
                 <Logo />
-              </Link>
+              </button>
             </div>
 
             {/* Desktop Navigation Links with sliding background pill */}
             <div className="hidden lg:flex items-center gap-2 relative">
-              {links.map((link, idx) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  end={link.to === "/"}
-                  onMouseEnter={() => setHoveredIdx(idx)}
-                  onMouseLeave={() => setHoveredIdx(null)}
-                  className={({ isActive }) =>
-                    `relative px-5 py-2.5 transition-colors duration-300 rounded-md block ${
+              {links.map((link, idx) => {
+                const isActive = activeSection === link.to;
+                return (
+                  <button
+                    key={link.to}
+                    onClick={() => {
+                      scrollToSection(link.to);
+                      playHoverSound();
+                    }}
+                    onMouseEnter={() => setHoveredIdx(idx)}
+                    onMouseLeave={() => setHoveredIdx(null)}
+                    className={`relative px-5 py-2.5 transition-colors duration-300 rounded-md block focus:outline-none ${
                       isActive ? "text-white" : "text-gray-400 hover:text-white"
-                    }`
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      {/* Active / Hover sliding background backplate */}
-                      <AnimatePresence>
-                        {hoveredIdx === idx && (
-                          <motion.div
-                            layoutId="navHoverPill"
-                            className="absolute inset-0 bg-white/[0.04] border border-white/[0.08] backdrop-blur-md rounded-md -z-10"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                          />
-                        )}
-                      </AnimatePresence>
-                      
-                      {/* Active indicator dot */}
-                      {isActive && (
+                    }`}
+                  >
+                    {/* Active / Hover sliding background backplate */}
+                    <AnimatePresence>
+                      {hoveredIdx === idx && (
                         <motion.div
-                          layoutId="navActiveDot"
-                          className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
-                          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                          layoutId="navHoverPill"
+                          className="absolute inset-0 bg-white/[0.04] border border-white/[0.08] backdrop-blur-md rounded-md -z-10"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ type: "spring", stiffness: 350, damping: 30 }}
                         />
                       )}
+                    </AnimatePresence>
+                    
+                    {/* Active indicator dot */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="navActiveDot"
+                        className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      />
+                    )}
 
-                      <ScrambleText text={link.label} />
-                    </>
-                  )}
-                </NavLink>
-              ))}
+                    <ScrambleText text={link.label} />
+                  </button>
+                );
+              })}
             </div>
 
             {/* Generative Audio, Live clock & Customer Button */}
@@ -345,6 +388,10 @@ export default function Navbar() {
               {/* Client Tactical Button with sweep scanner */}
               <button
                 type="button"
+                onClick={() => {
+                  scrollToSection("contato");
+                  playHoverSound();
+                }}
                 onMouseEnter={playHoverSound}
                 className="group relative overflow-hidden bg-white text-black hover:bg-transparent hover:text-white border border-white px-5 py-3 text-[9px] font-black tracking-[0.2em] transition-all duration-300 active:scale-95 shadow-[0_4px_15px_rgba(255,255,255,0.05)]"
               >
@@ -357,7 +404,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setOpen(!open)}
-              className="lg:hidden text-white p-2 relative z-50 hover:bg-white/5 rounded-lg transition-colors"
+              className="lg:hidden text-white p-2 relative z-50 hover:bg-white/5 rounded-lg transition-colors focus:outline-none"
               aria-label={open ? "Fechar menu" : "Abrir menu"}
               aria-expanded={open}
             >
@@ -375,7 +422,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-[#020512] lg:hidden flex flex-col justify-center items-center px-6 overflow-hidden crt-flicker-anim"
+            className="fixed inset-0 z-40 bg-[#020512] lg:hidden flex flex-col justify-center items-center px-6 overflow-hidden crt-flicker-anim animate-none"
           >
             {/* CRT TV monitor effects overlay */}
             <div className="absolute inset-0 pointer-events-none z-10 opacity-30 crt-overlay" />
@@ -392,29 +439,31 @@ export default function Navbar() {
 
               {/* Menu terminal links */}
               <div className="w-full flex flex-col gap-4">
-                {links.map((link, idx) => (
-                  <motion.div
-                    key={link.to}
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.08, duration: 0.4 }}
-                    className="w-full text-center"
-                  >
-                    <NavLink
-                      to={link.to}
-                      end={link.to === "/"}
-                      onClick={() => setOpen(false)}
-                      className={({ isActive }) =>
-                        `block text-sm font-mono tracking-[0.25em] py-3.5 border border-white/[0.04] bg-white/[0.01] hover:bg-primary/[0.05] hover:border-primary/20 transition-all duration-300 uppercase ${isActive
+                {links.map((link, idx) => {
+                  const isActive = activeSection === link.to;
+                  return (
+                    <motion.div
+                      key={link.to}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.08, duration: 0.4 }}
+                      className="w-full text-center"
+                    >
+                      <button
+                        onClick={() => {
+                          scrollToSection(link.to);
+                          setOpen(false);
+                        }}
+                        className={`w-full block text-sm font-mono tracking-[0.25em] py-3.5 border border-white/[0.04] bg-white/[0.01] hover:bg-primary/[0.05] hover:border-primary/20 transition-all duration-300 uppercase focus:outline-none ${isActive
                           ? "text-primary border-primary/20 bg-primary/[0.04]"
                           : "text-gray-400 hover:text-white"
-                        }`
-                      }
-                    >
-                      &gt; {link.label}
-                    </NavLink>
-                  </motion.div>
-                ))}
+                        }`}
+                      >
+                        &gt; {link.label}
+                      </button>
+                    </motion.div>
+                  );
+                })}
               </div>
 
               {/* Mobile CTA terminal action button */}
@@ -426,8 +475,11 @@ export default function Navbar() {
               >
                 <button
                   type="button"
-                  onClick={() => setOpen(false)}
-                  className="w-full inline-flex items-center justify-between border border-white bg-white text-black hover:bg-transparent hover:text-white text-[10px] font-black tracking-[0.25em] py-4 px-6 transition-all duration-300 uppercase"
+                  onClick={() => {
+                    scrollToSection("contato");
+                    setOpen(false);
+                  }}
+                  className="w-full inline-flex items-center justify-between border border-white bg-white text-black hover:bg-transparent hover:text-white text-[10px] font-black tracking-[0.25em] py-4 px-6 transition-all duration-300 uppercase focus:outline-none"
                 >
                   SOLICITAR COTAÇÃO
                   <ArrowRight className="h-4 w-4" />

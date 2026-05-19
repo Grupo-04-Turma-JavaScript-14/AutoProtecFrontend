@@ -5,6 +5,8 @@ import { Shield, Cpu } from "lucide-react";
 import Navbar from "./components/layout/Navbar.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import GlobalBackground3D from "./components/three/GlobalBackground3D.jsx";
+import IntroScrollytelling from "./components/sections/IntroScrollytelling.jsx";
+import ScrollToTop from "./components/common/ScrollToTop.jsx";
 
 // Tactical boot logs to render sequentially
 const BOOT_LOGS = [
@@ -18,9 +20,10 @@ const BOOT_LOGS = [
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentLog, setCurrentLog] = useState("");
-  const [scrambledLog, setScrambledLog] = useState(""); // Improvement 8
+  const [scrambledLog, setScrambledLog] = useState(""); 
 
   // Counter loop for fake cybernetic preloader
   useEffect(() => {
@@ -72,8 +75,8 @@ export default function App() {
     return () => clearInterval(interval);
   }, [currentLog]);
 
-  // Synthesize dramatic start-up synth bass drop riser and transition to ambient synth
-  const handleSystemActivation = () => {
+  // Synthesize dramatic start-up synth bass drop riser
+  const playRiserSound = () => {
     try {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
       const startupCtx = new AudioContextClass();
@@ -103,12 +106,20 @@ export default function App() {
     } catch (e) {
       console.warn("Failed to play dramatic system audio startup riser:", e);
     }
+  };
 
-    // Auto-toggle active ambient audio in Navbar
-    window.dispatchEvent(new CustomEvent("activate-audio-from-preloader"));
-    
-    // Complete fake loading and trigger entrance
+  const handleSystemActivation = () => {
+    playRiserSound();
+    // Transition from progress loader to Scrollytelling introduction
     setLoading(false);
+    setShowIntro(true);
+  };
+
+  const handleIntroComplete = () => {
+    window.scrollTo({ top: 0, left: 0 });
+    setShowIntro(false);
+    // Auto-toggle active ambient audio in Navbar once main landing page reveals
+    window.dispatchEvent(new CustomEvent("activate-audio-from-preloader"));
   };
 
   return (
@@ -212,7 +223,7 @@ export default function App() {
                       className="w-full px-6 py-4.5 bg-white text-black border border-white hover:bg-transparent hover:text-white text-[10px] font-black tracking-[0.3em] transition-all duration-300 shadow-[0_5px_25px_rgba(255,255,255,0.25)] hover:shadow-[0_0_35px_rgba(30,91,255,0.45)] hover:border-primary active:scale-98 uppercase inline-flex items-center justify-center gap-2"
                     >
                       <Cpu className="h-3.5 w-3.5" />
-                      ATIVAR ESCUDO AP
+                      INICIAR APRESENTAÇÃO
                     </motion.button>
                   )}
                 </AnimatePresence>
@@ -222,13 +233,32 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Main interactive page layout (Improvement 9 - Zoom Reveal) */}
+      {/* Scrollytelling Presentation overlay */}
+      <AnimatePresence>
+        {showIntro && (
+          <motion.div
+            key="intro-scrolly"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ 
+              opacity: 0, 
+              scale: 1.05,
+              transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } 
+            }}
+            className="fixed inset-0 z-[105]"
+          >
+            <IntroScrollytelling onComplete={handleIntroComplete} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Main interactive page layout (Reveal after loading and intro) */}
       <div className="relative z-10 flex flex-col min-h-screen w-full pointer-events-none">
         <div className="pointer-events-auto w-full flex flex-col min-h-screen">
           <AnimatePresence>
-            {!loading && (
+            {!loading && !showIntro && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.96, y: 15 }} // Improvement 9: Parallax scaling entrance
+                initial={{ opacity: 0, scale: 0.96, y: 15 }} 
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 1.0, ease: [0.76, 0, 0.24, 1], delay: 0.15 }}
                 className="w-full flex flex-col min-h-screen"
@@ -238,6 +268,7 @@ export default function App() {
                   <Outlet />
                 </main>
                 <Footer />
+                <ScrollToTop />
               </motion.div>
             )}
           </AnimatePresence>

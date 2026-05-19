@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Headphones, Car, BadgeDollarSign } from "lucide-react";
 import Hero from "./Hero";
+import { playHoverSound } from "../layout/Navbar";
 
 const benefits = [
   {
@@ -65,7 +66,7 @@ export default function Home() {
         </div>
 
         {/* Continuous Editorial Grid (Brutalist Luxury) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-white/[0.06] rounded-2xl overflow-hidden bg-black/25 backdrop-blur-md">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-white/[0.06] rounded-2xl overflow-hidden bg-[#0A1230]/40 backdrop-blur-md">
           {benefits.map((b, idx) => (
             <motion.div
               key={b.title}
@@ -73,7 +74,8 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: idx * 0.1, ease: "easeOut" }}
-              className="relative p-8 lg:p-10 flex flex-col justify-between items-start text-left border-b md:border-b-0 md:border-r border-white/[0.06] last:border-0 group hover:bg-white/[0.02] transition-all duration-500"
+              onMouseEnter={playHoverSound}
+              className="relative p-8 lg:p-10 flex flex-col justify-between items-start text-left border-b lg:border-b-0 border-white/[0.06] last:border-b-0 lg:border-r lg:last:border-r-0 md:[&:nth-child(2n)]:border-r-0 lg:[&]:border-r border-white/[0.06] group hover:bg-white/[0.02] transition-all duration-500 cursor-pointer"
             >
               {/* Subtle top indicator line on hover */}
               <div className="absolute top-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
