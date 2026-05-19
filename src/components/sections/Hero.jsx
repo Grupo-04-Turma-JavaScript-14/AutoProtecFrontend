@@ -83,16 +83,16 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.96, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-            className="w-full max-w-md aspect-square pointer-events-auto flex flex-col items-center justify-center relative overflow-visible group"
+            className="w-full max-w-3xl aspect-square pointer-events-auto flex flex-col items-center justify-center relative overflow-visible group"
           >
             {/* Background 3D Radial Glow Backdrop */}
-            <div className="absolute w-[400px] h-[400px] rounded-full bg-primary/10 blur-[100px] pointer-events-none -z-25" />
+            <div className="absolute w-[500px] h-[500px] rounded-full bg-primary/10 blur-[110px] pointer-events-none -z-25" />
 
             {/* Orbit 1: Outer Rotating Ring */}
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
-              className="absolute w-[440px] h-[440px] rounded-full border border-primary/20 flex items-center justify-center -z-10"
+              className="absolute w-[580px] h-[580px] rounded-full border border-primary/20 flex items-center justify-center -z-10"
             >
               <div className="w-[6px] h-[6px] bg-primary rounded-full absolute -top-[3px] shadow-[0_0_10px_#1E5BFF]" />
             </motion.div>
@@ -101,43 +101,33 @@ export default function Hero() {
             <motion.div
               animate={{ rotate: -360 }}
               transition={{ repeat: Infinity, duration: 18, ease: "linear" }}
-              className="absolute w-[340px] h-[340px] rounded-full border border-dashed border-cyan-500/15 flex items-center justify-center -z-10"
+              className="absolute w-[460px] h-[460px] rounded-full border border-dashed border-cyan-500/15 flex items-center justify-center -z-10"
             >
               <div className="w-[4px] h-[4px] bg-cyan-400 rounded-full absolute -bottom-[2px] shadow-[0_0_8px_#06B6D4]" />
             </motion.div>
 
             {/* Orbit 3: Center Grid Rings */}
-            <div className="absolute w-60 h-60 border border-primary/5 rounded-full -z-10 flex items-center justify-center">
-              <div className="w-44 h-44 border border-dashed border-primary/5 rounded-full" />
+            <div className="absolute w-[680px] h-[680px] border border-primary/5 rounded-full -z-10 flex items-center justify-center">
+              <div className="w-[460px] h-[460px] border border-dashed border-primary/5 rounded-full" />
             </div>
-
-            {/* Holographic light projector base pedestal at the bottom */}
-            <div className="w-80 h-6 bg-gradient-to-t from-primary/35 via-primary/5 to-transparent border-b-2 border-primary/45 rounded-full absolute bottom-8 blur-[0.5px] shadow-[0_15px_40px_rgba(30,91,255,0.45)]" />
 
             {/* Holographic scan beam cone */}
             <div 
-              className="absolute bottom-10 w-64 h-72 bg-gradient-to-t from-primary/12 via-primary/[0.01] to-transparent opacity-75 pointer-events-none" 
+              className="absolute bottom-10 w-[600px] h-[520px] bg-gradient-to-t from-primary/12 via-primary/[0.01] to-transparent opacity-75 pointer-events-none" 
               style={{ clipPath: "polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)" }}
             />
 
             {/* Bobbing Levitating Giant Brand Logo */}
             <motion.div
-              animate={{ y: [0, -15, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              animate={{ y: [0, -20, 0] }}
+              transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
               className="relative z-10 flex flex-col items-center text-center select-none cursor-pointer"
             >
               <img 
                 src="/images/content3.png" 
                 alt="AutoProtect Logo" 
-                className="w-56 h-56 object-contain drop-shadow-[0_0_60px_rgba(30,91,255,0.8)] group-hover:scale-105 transition-transform duration-500 filter brightness-110" 
+                className="w-[640px] h-[640px] object-contain drop-shadow-[0_0_80px_rgba(30,91,255,0.85)] group-hover:scale-105 transition-transform duration-500 filter brightness-110 logo-glitch-effect" 
               />
-              <div className="mt-5 font-black text-3xl tracking-tighter leading-none">
-                <span className="text-white font-black">Auto</span>
-                <span className="text-primary drop-shadow-[0_0_12px_rgba(30,91,255,0.6)]">Protec</span>
-              </div>
-              <div className="text-[9px] tracking-[0.45em] text-gray-500 font-extrabold mt-3 uppercase">
-                COBERTURA AUTOMOTIVA ELITE
-              </div>
             </motion.div>
 
           </motion.div>
