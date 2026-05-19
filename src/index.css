@@ -17,26 +17,57 @@ body {
   width: 10px;
   height: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: #01030a;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #1e5bff;
   border-radius: 8px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #1748d6;
 }
 
 /* Glow para o card hero */
+.laser-scan-bar {
+  background: linear-gradient(to bottom, transparent, rgba(30, 91, 255, 0.35) 50%, transparent);
+  height: 4px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  pointer-events: none;
+  animation: laser-sweep 3.5s infinite linear;
+  box-shadow: 0 0 20px rgba(30, 91, 255, 0.6);
+  z-index: 25;
+}
+
+@keyframes icon-glitch {
+  0% { transform: translate(0) skew(0deg); filter: hue-rotate(0deg); }
+  2% { transform: translate(-2px, 1.5px) skew(-6deg); filter: hue-rotate(90deg) drop-shadow(-2px 0 0 #ff0055); }
+  4% { transform: translate(2px, -1.5px) skew(6deg); filter: drop-shadow(2px 0 0 #00ffaa); }
+  6% { transform: translate(0) skew(0deg); filter: none; }
+  92% { transform: translate(0) skew(0deg); filter: none; }
+  94% { transform: translate(-1.5px, -1.5px) skew(3deg); filter: hue-rotate(180deg) drop-shadow(-1px 0 0 #00aaff); }
+  96% { transform: translate(1.5px, 1.5px) skew(-3deg); }
+  98% { transform: translate(0) skew(0deg); filter: none; }
+}
+
+.glitch-icon {
+  animation: icon-glitch 2.2s infinite linear;
+}
+
 .hero-glow {
   background: radial-gradient(circle at 70% 50%, rgba(30, 91, 255, 0.25), transparent 60%),
-              radial-gradient(circle at 90% 60%, rgba(255, 44, 44, 0.18), transparent 55%);
+    radial-gradient(circle at 90% 60%, rgba(255, 44, 44, 0.18), transparent 55%);
 }
 
 .card-glow-blue {
   box-shadow: 0 0 0 1px rgba(30, 91, 255, 0.4), 0 0 40px -10px rgba(30, 91, 255, 0.5);
 }
+
 .card-glow-red {
   box-shadow: 0 0 0 1px rgba(255, 44, 44, 0.4), 0 0 40px -10px rgba(255, 44, 44, 0.5);
 }
@@ -44,7 +75,7 @@ body {
 /* Cyber CRT TV Monitor Texture & Noise */
 .crt-overlay {
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-              linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
+    linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
   background-size: 100% 4px, 6px 100%;
 }
 
@@ -54,9 +85,17 @@ body {
 }
 
 @keyframes crt-flicker {
-  0% { opacity: 0.985; }
-  50% { opacity: 1; }
-  100% { opacity: 0.99; }
+  0% {
+    opacity: 0.985;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.99;
+  }
 }
 
 .crt-flicker-anim {

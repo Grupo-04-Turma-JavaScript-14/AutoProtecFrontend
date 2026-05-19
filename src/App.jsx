@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Cpu } from "lucide-react";
+import { Shield, Cpu, ArrowRight } from "lucide-react";
 import Navbar from "./components/layout/Navbar.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import GlobalBackground3D from "./components/three/GlobalBackground3D.jsx";
@@ -150,95 +150,69 @@ export default function App() {
             initial={{ opacity: 1 }}
             exit={{ 
               opacity: 0, 
-              scale: 1.06,
-              transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } 
+              scale: 1.08,
+              filter: "blur(8px)",
+              transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] } 
             }}
-            className="fixed inset-0 z-[100] bg-[#141519] flex flex-col items-center justify-center font-mono p-6 overflow-hidden"
+            className="fixed inset-0 z-[100] bg-[#02040a] flex flex-col items-center justify-center p-6 overflow-hidden"
           >
-            {/* Inner CRT texture */}
-            <div className="absolute inset-0 pointer-events-none opacity-45 crt-overlay" />
-            <div className="absolute inset-0 pointer-events-none crt-noise" />
+            {/* Smooth glowing gradients background */}
+            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[140px] pointer-events-none animate-pulse" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600/10 blur-[140px] pointer-events-none animate-[pulse_3s_infinite]" />
 
-            <div className="flex flex-col items-center gap-10 max-w-sm w-full relative z-10 text-center">
+            {/* Main Preloader block */}
+            <div className="flex flex-col items-center gap-10 max-w-3xl w-full relative z-10 text-center">
               
-              {/* Dynamic Scanning Circular HUD */}
-              <div className="relative w-44 h-44 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
-                  {/* Outer Orbit Track */}
-                  <circle
-                    cx="88"
-                    cy="88"
-                    r="80"
-                    className="stroke-white/[0.04] fill-none"
-                    strokeWidth="2"
-                  />
-                  {/* Animated glowing progress ring */}
-                  <motion.circle
-                    cx="88"
-                    cy="88"
-                    r="80"
-                    className="stroke-primary fill-none shadow-[0_0_15px_#1E5BFF]"
-                    strokeWidth="3"
-                    strokeDasharray={2 * Math.PI * 80}
-                    strokeDashoffset={2 * Math.PI * 80 * (1 - progress / 100)}
+              {/* Large central content2 logo */}
+              <div className="relative flex items-center justify-center py-4 select-none">
+                <img 
+                  src="/images/content2.png" 
+                  alt="AutoProtect" 
+                  className="w-[680px] h-[220px] object-contain filter brightness-110 drop-shadow-[0_0_50px_rgba(30,91,255,0.45)] animate-pulse"
+                />
+              </div>
+
+              {/* Minimal progress line indicator */}
+              <div className="w-80 max-w-full flex flex-col gap-2.5 mt-2 select-none">
+                {/* Sleek track */}
+                <div className="h-[2px] w-full bg-white/10 rounded-full overflow-hidden relative">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-400"
+                    style={{ width: `${progress}%` }}
                     transition={{ ease: "easeOut" }}
                   />
-                </svg>
+                </div>
                 
-                {/* Numeric Center tracker with live EQ (Improvement 7) */}
-                <div className="absolute flex flex-col items-center justify-center">
-                  <Shield className="h-8 w-8 text-primary animate-pulse mb-1" />
-                  <span className="text-2.5xl font-black tracking-widest text-white leading-none">
-                    {String(progress).padStart(3, "0")}%
+                {/* Status & Numeric tracker */}
+                <div className="flex justify-between items-center text-[9px] tracking-[0.25em] text-white/40 font-bold uppercase font-sans">
+                  <span className="flex items-center gap-1.5 text-blue-500/80">
+                    <Shield className="h-3.5 w-3.5 glitch-icon" />
+                    {progress === 100 ? "SISTEMA SEGURO" : "CARREGANDO"}
                   </span>
-                  
-                  {/* Pulsing Audio Waveform HUD Equalizer (Improvement 7) */}
-                  <div className="flex gap-0.5 justify-center items-end h-3 mt-1.5 select-none w-16">
-                    {[0.5, 0.9, 0.4, 0.8, 0.6].map((initialScale, i) => (
-                      <motion.div
-                        key={i}
-                        animate={{ scaleY: [1, 2.6 * initialScale, 1] }}
-                        transition={{
-                          repeat: Infinity,
-                          duration: 0.5 + i * 0.15,
-                          ease: "easeInOut",
-                        }}
-                        className="w-[2px] h-2 bg-primary origin-bottom"
-                      />
-                    ))}
-                  </div>
+                  <span className="text-white/60">{progress}%</span>
                 </div>
               </div>
 
-              {/* Sequential terminal logging readout */}
-              <div className="w-full min-h-[54px] bg-black/50 border border-white/[0.06] p-4 rounded text-left font-mono space-y-1.5 shadow-inner">
-                <div className="flex justify-between items-center text-[7px] text-gray-500 border-b border-white/[0.06] pb-1 select-none">
-                  <span>SEC_MAIN // DECRYPTER_LOGS</span>
-                  <span className="animate-pulse text-[#06B6D4]">● RUNNING</span>
-                </div>
-                <p className="text-[9px] text-[#06B6D4] tracking-wider leading-relaxed truncate">
-                  &gt; {scrambledLog}
-                </p>
-              </div>
-
-              {/* Pulsing Tactical entrance button reveals at 100% */}
-              <div className="h-14 w-full flex items-center justify-center">
+              {/* Activation button */}
+              <div className="h-16 w-full flex items-center justify-center mt-4">
                 <AnimatePresence>
                   {progress === 100 && (
                     <motion.button
                       key="enter-btn"
-                      initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                      initial={{ opacity: 0, scale: 0.95, y: 15 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.92, y: -10 }}
+                      exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                       onClick={handleSystemActivation}
-                      className="w-full px-6 py-4.5 bg-white text-black border border-white hover:bg-transparent hover:text-white text-[10px] font-black tracking-[0.3em] transition-all duration-300 shadow-[0_5px_25px_rgba(255,255,255,0.25)] hover:shadow-[0_0_35px_rgba(30,91,255,0.45)] hover:border-primary active:scale-98 uppercase inline-flex items-center justify-center gap-2"
+                      className="px-10 py-4.5 border border-white/20 hover:border-white text-white hover:bg-white hover:text-black text-[10px] font-bold tracking-[0.3em] transition-all duration-500 active:scale-[0.98] uppercase inline-flex items-center justify-center gap-3 rounded-full cursor-pointer"
                     >
-                      <Cpu className="h-3.5 w-3.5" />
                       INICIAR APRESENTAÇÃO
+                      <ArrowRight className="h-4 w-4" />
                     </motion.button>
                   )}
                 </AnimatePresence>
               </div>
+
             </div>
           </motion.div>
         )}

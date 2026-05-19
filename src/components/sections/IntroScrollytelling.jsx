@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 // Web Audio API Synthesizer player for audio feedback
@@ -86,6 +87,98 @@ const slides = [
   }
 ];
 
+// Custom heading component with magnetic repulsion and soft return zero-gravity physics
+function FloatingTitle({ text }) {
+  const containerRef = useRef(null);
+  const [mousePos, setMousePos] = useState({ x: null, y: null, width: 0, height: 0 });
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      width: rect.width,
+      height: rect.height
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePos({ x: null, y: null, width: 0, height: 0 });
+  };
+
+  const words = text.split(" ");
+  let globalCharCounter = 0;
+
+  return (
+    <h2 
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95] text-white uppercase text-balance cursor-default select-none flex flex-wrap gap-x-[0.25em] gap-y-3.5 relative z-10"
+    >
+      {words.map((word, wIdx) => {
+        const letters = Array.from(word);
+        return (
+          <span key={wIdx} className="inline-block whitespace-nowrap">
+            {letters.map((char, lIdx) => {
+              const currentIdx = globalCharCounter++;
+              
+              // Slow space floating wave frequency
+              const randomYShift = Math.sin(currentIdx * 0.4) * 2;
+              
+              let pushX = 0;
+              let pushY = 0;
+              let isUnderForce = false;
+
+              if (mousePos.x !== null && mousePos.width > 0) {
+                // Estimate character coordinate relative to parent boundary
+                const letterX = (currentIdx / text.length) * mousePos.width;
+                const letterY = mousePos.height / 2;
+
+                const dx = letterX - mousePos.x;
+                const dy = letterY - mousePos.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const radius = 180; // Proximity influence threshold
+
+                if (dist < radius) {
+                  isUnderForce = true;
+                  const force = (radius - dist) / radius;
+                  const angle = Math.atan2(dy, dx);
+                  // Displace letter away from cursor
+                  pushX = Math.cos(angle) * force * 45;
+                  pushY = Math.sin(angle) * force * 25;
+                }
+              }
+
+              return (
+                <motion.span
+                  key={lIdx}
+                  className="inline-block origin-center"
+                  animate={{
+                    x: pushX,
+                    y: pushY + randomYShift,
+                    scale: isUnderForce ? 1.08 : 1,
+                    textShadow: isUnderForce 
+                      ? "0 0 16px rgba(255,255,255,0.6)" 
+                      : "0 0 0px rgba(255,255,255,0)"
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 18, // Super soft low-tension spring for continuous float feel
+                    damping: 12    // Smooth deceleration ensures slow, gradual recovery back to 0
+                  }}
+                >
+                  {char}
+                </motion.span>
+              );
+            })}
+          </span>
+        );
+      })}
+    </h2>
+  );
+}
+
 export default function IntroScrollytelling({ onComplete }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [scrollY, setScrollY] = useState(0);
@@ -96,16 +189,12 @@ export default function IntroScrollytelling({ onComplete }) {
   // Canvas references for backgrounds
   const spaceCanvasRef = useRef(null);
   const techCanvasRef = useRef(null);
+  const shieldCanvasRef = useRef(null);
   
   // Slide 1 Orbits
   const orb1Ref = useRef(null);
   const orb2Ref = useRef(null);
   const orb3Ref = useRef(null);
-
-  // Slide 3 Shields
-  const shield1Ref = useRef(null);
-  const shield2Ref = useRef(null);
-  const shield3Ref = useRef(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -120,7 +209,7 @@ export default function IntroScrollytelling({ onComplete }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Performance loops for Slide 1 & Slide 3 background shifts
+  // Slide 1 Background rotating orbits loop
   useEffect(() => {
     let t = 0;
     let scrollVelocity = 0;
@@ -140,11 +229,9 @@ export default function IntroScrollytelling({ onComplete }) {
       scrollVelocity = scrollVelocity * 0.92 + diff * 0.08;
       lastScroll = currentScroll;
 
-      // Speed accelerations based on scroll depth rate
       const speed = 0.45 + Math.abs(scrollVelocity) * 0.15;
       t += speed;
 
-      // Slide 1 Orbits
       if (orb1Ref.current) {
         orb1Ref.current.style.transform = `translate(-50%, -50%) rotate(${t * 0.05}deg)`;
       }
@@ -153,17 +240,6 @@ export default function IntroScrollytelling({ onComplete }) {
       }
       if (orb3Ref.current) {
         orb3Ref.current.style.transform = `translate(-50%, -50%) rotate(${t * 0.12}deg)`;
-      }
-
-      // Slide 3 Shields
-      if (shield1Ref.current) {
-        shield1Ref.current.style.transform = `rotate(${t * 0.04}deg) scale(${1 + Math.sin(t * 0.012) * 0.02})`;
-      }
-      if (shield2Ref.current) {
-        shield2Ref.current.style.transform = `rotate(${-t * 0.07}deg) scale(${1 + Math.cos(t * 0.012) * 0.02})`;
-      }
-      if (shield3Ref.current) {
-        shield3Ref.current.style.transform = `rotate(${t * 0.1}deg) scale(${1 + Math.sin(t * 0.012 + 1) * 0.02})`;
       }
 
       animationFrameId = requestAnimationFrame(animate);
@@ -188,7 +264,7 @@ export default function IntroScrollytelling({ onComplete }) {
       y: Math.random() * height,
       size: Math.random() * 2 + 0.5,
       speed: Math.random() * 0.4 + 0.1,
-      color: `rgba(147, 197, 253, ${Math.random() * 0.4 + 0.3})` // Blue-white stars
+      color: `rgba(147, 197, 253, ${Math.random() * 0.4 + 0.3})`
     }));
 
     const handleResize = () => {
@@ -207,7 +283,7 @@ export default function IntroScrollytelling({ onComplete }) {
     }
 
     const drawStars = () => {
-      ctx.fillStyle = "rgba(1, 3, 10, 0.25)"; // Trail overlay
+      ctx.fillStyle = "rgba(1, 3, 10, 0.25)";
       ctx.fillRect(0, 0, width, height);
 
       let currentScroll = 0;
@@ -219,24 +295,20 @@ export default function IntroScrollytelling({ onComplete }) {
       lastScroll = currentScroll;
 
       stars.forEach((s) => {
-        // Star movement on its own, plus acceleration depending on vertical scroll rate
         const warpMultiplier = 1 + Math.abs(scrollVelocity) * 0.35;
         s.y -= s.speed * warpMultiplier;
 
-        // Reset if off-screen top
         if (s.y < 0) {
           s.y = height;
           s.x = Math.random() * width;
         }
 
-        // Draw star, stretch vertically if warp speed is active (scrolling fast)
         ctx.beginPath();
         ctx.strokeStyle = s.color;
         ctx.lineWidth = s.size;
         ctx.lineCap = "round";
         ctx.moveTo(s.x, s.y);
         
-        // Stretch lines
         const stretch = Math.max(1, Math.abs(scrollVelocity) * 0.25);
         ctx.lineTo(s.x, s.y + stretch);
         ctx.stroke();
@@ -303,11 +375,102 @@ export default function IntroScrollytelling({ onComplete }) {
     };
   }, [activeSlide]);
 
+  // Slide 3: Interactive Cyber-Plexus Mesh Canvas
+  useEffect(() => {
+    if (!shieldCanvasRef.current || activeSlide !== 2) return;
+    const canvas = shieldCanvasRef.current;
+    const ctx = canvas.getContext("2d");
+    
+    let width = (canvas.width = canvas.offsetWidth);
+    let height = (canvas.height = canvas.offsetHeight);
+
+    const nodeCount = 75;
+    const nodes = Array.from({ length: nodeCount }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 1.2,
+      vy: (Math.random() - 0.5) * 1.2,
+      radius: Math.random() * 3.5 + 1.5
+    }));
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = canvas.offsetWidth;
+      height = canvas.height = canvas.offsetHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    let scrollVelocity = 0;
+    let lastScroll = 0;
+    let animationFrameId;
+
+    if (containerRef.current) {
+      lastScroll = containerRef.current.scrollTop;
+    }
+
+    const drawPlexus = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      let currentScroll = 0;
+      if (containerRef.current) {
+        currentScroll = containerRef.current.scrollTop;
+      }
+      const diff = currentScroll - lastScroll;
+      scrollVelocity = scrollVelocity * 0.94 + diff * 0.06;
+      lastScroll = currentScroll;
+
+      const speedMultiplier = 1 + Math.abs(scrollVelocity) * 0.45;
+
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 110) {
+            const alpha = (1 - dist / 110) * 0.32;
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      nodes.forEach((n) => {
+        n.x += n.vx * speedMultiplier;
+        n.y += n.vy * speedMultiplier;
+
+        if (n.x < 0 || n.x > width) n.vx *= -1;
+        if (n.y < 0 || n.y > height) n.vy *= -1;
+
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(52, 211, 153, 0.75)";
+        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(16, 185, 129, 0.12)";
+        ctx.arc(n.x, n.y, n.radius * 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(drawPlexus);
+    };
+
+    drawPlexus();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [activeSlide]);
+
   const handleScroll = (e) => {
     const currentScroll = e.currentTarget.scrollTop;
     setScrollY(currentScroll);
 
-    // Lock and exit site past threshold
     if (currentScroll >= 2.2 * vh) {
       onComplete();
       return;
@@ -337,17 +500,14 @@ export default function IntroScrollytelling({ onComplete }) {
       <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.16] crt-overlay" />
       <div className="absolute inset-0 pointer-events-none z-50 crt-noise" />
 
-      {/* Slide 1 Background Visual: Floating Starfield & Orbit Rings */}
+      {/* Slide 1 Background Visual */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000"
         style={{ opacity: activeSlide === 0 ? 1 : 0 }}
       >
-        {/* Floating space canvas starfield (Stars move dynamically on their own) */}
         <canvas ref={spaceCanvasRef} className="absolute inset-0 w-full h-full object-cover" />
-
         <div className="absolute top-1/2 left-2/3 -translate-y-1/2 w-[550px] h-[550px] rounded-full bg-blue-500/10 blur-[90px] animate-[pulse_6s_infinite] pointer-events-none" />
         
-        {/* Rotating orbital grids */}
         <div 
           ref={orb1Ref}
           className="absolute top-1/2 left-2/3 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border-2 border-dashed border-blue-500/10 origin-center pointer-events-none"
@@ -362,7 +522,7 @@ export default function IntroScrollytelling({ onComplete }) {
         />
       </div>
 
-      {/* Slide 2 Background Visual: 3D perspective cyber grid */}
+      {/* Slide 2 Background Visual */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 overflow-hidden"
         style={{ opacity: activeSlide === 1 ? 1 : 0 }}
@@ -378,25 +538,13 @@ export default function IntroScrollytelling({ onComplete }) {
         />
       </div>
 
-      {/* Slide 3 Background Visual: Concentric emerald shields */}
+      {/* Slide 3 Background Visual */}
       <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 flex items-center justify-center"
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 overflow-hidden"
         style={{ opacity: activeSlide === 2 ? 1 : 0 }}
       >
-        <div className="absolute w-[500px] h-[500px] rounded-full bg-emerald-500/5 blur-[100px] animate-[pulse_8s_infinite]" />
-        
-        <div 
-          ref={shield1Ref}
-          className="w-[500px] h-[500px] rounded-full border border-dashed border-emerald-500/15 absolute origin-center"
-        />
-        <div 
-          ref={shield2Ref}
-          className="w-[360px] h-[360px] rounded-full border-2 border-emerald-400/20 absolute origin-center"
-        />
-        <div 
-          ref={shield3Ref}
-          className="w-[220px] h-[220px] rounded-full border border-dashed border-emerald-600/30 absolute origin-center"
-        />
+        <canvas ref={shieldCanvasRef} className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-emerald-500/5 blur-[125px] animate-[pulse_7s_infinite] pointer-events-none" />
       </div>
 
       {/* Side dots */}
@@ -461,7 +609,7 @@ export default function IntroScrollytelling({ onComplete }) {
                 }}
               />
 
-              {/* Split layout content block: Left splits left, Right splits right when scrolling out */}
+              {/* Split layout content block */}
               <div 
                 className="max-w-6xl w-full grid lg:grid-cols-12 gap-12 lg:gap-20 items-center relative z-10 text-left transition-all duration-[750ms] ease-out"
                 style={{
@@ -471,16 +619,14 @@ export default function IntroScrollytelling({ onComplete }) {
                 }}
               >
                 
-                {/* Left side: Premium typography parallax */}
+                {/* Left side: Premium typography with letter hover spread expansion */}
                 <div 
                   className="lg:col-span-6 space-y-6 transition-transform duration-[600ms] ease-out"
                   style={{
                     transform: `translateX(${ratio * -120}px)`
                   }}
                 >
-                  <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[0.95] text-white uppercase text-balance">
-                    {slide.title}
-                  </h2>
+                  <FloatingTitle text={slide.title} />
 
                   <p className="text-gray-400 text-sm sm:text-base font-semibold max-w-xl leading-relaxed">
                     {slide.description}
