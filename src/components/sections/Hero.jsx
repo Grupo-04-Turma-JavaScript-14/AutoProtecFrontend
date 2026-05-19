@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
+  const [rotation, setRotation] = useState(0);
+
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -61,7 +63,7 @@ export default function Hero() {
             <button
               type="button"
               onClick={() => scrollToSection("contato")}
-              className="group relative inline-flex items-center justify-center gap-3 bg-white text-black hover:bg-transparent hover:text-white border border-white px-9 py-4.5 text-[10px] font-black tracking-[0.25em] transition-all duration-300 active:scale-95 shadow-[0_4px_25px_rgba(255,255,255,0.1)] focus:outline-none"
+              className="group relative inline-flex items-center justify-center gap-3 bg-white text-black hover:bg-transparent hover:text-white border border-white px-10 py-5 text-[11px] font-black tracking-[0.25em] transition-all duration-300 active:scale-95 shadow-[0_4px_25px_rgba(255,255,255,0.1)] focus:outline-none"
             >
               FAZER COTAÇÃO
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -70,7 +72,7 @@ export default function Hero() {
             <button
               type="button"
               onClick={() => scrollToSection("seguros")}
-              className="group inline-flex items-center justify-center gap-3 border border-white/10 hover:border-white/30 bg-transparent text-white text-[10px] font-black tracking-[0.25em] px-9 py-4.5 transition-all duration-300 active:scale-95 hover:bg-white/[0.02] focus:outline-none"
+              className="group inline-flex items-center justify-center gap-3 border border-white/10 hover:border-white/30 bg-transparent text-white text-[11px] font-black tracking-[0.25em] px-10 py-5 transition-all duration-300 active:scale-95 hover:bg-white/[0.02] focus:outline-none"
             >
               CONHECER PLANOS
             </button>
@@ -78,12 +80,12 @@ export default function Hero() {
         </div>
 
         {/* Right Side: Free Floating 3D Holographic Projector (Card container removed) */}
-        <div className="w-full lg:w-auto flex-1 flex justify-center lg:justify-end pointer-events-none">
+        <div className="w-full lg:w-auto flex-1 flex justify-center lg:justify-end">
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-            className="w-full max-w-3xl aspect-square pointer-events-auto flex flex-col items-center justify-center relative overflow-visible group"
+            className="w-full max-w-3xl aspect-square flex flex-col items-center justify-center relative overflow-visible group"
           >
             {/* Background 3D Radial Glow Backdrop */}
             <div className="absolute w-[500px] h-[500px] rounded-full bg-primary/10 blur-[110px] pointer-events-none -z-25" />
@@ -123,10 +125,29 @@ export default function Hero() {
               transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
               className="relative z-10 flex flex-col items-center text-center select-none cursor-pointer"
             >
-              <img 
+              <motion.img 
                 src="/images/content3.png" 
                 alt="AutoProtect Logo" 
-                className="w-[640px] h-[640px] object-contain drop-shadow-[0_0_80px_rgba(30,91,255,0.85)] group-hover:scale-105 transition-transform duration-500 filter brightness-110 logo-glitch-effect" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Spin multiple full rotations like a heavy roulette wheel (1440 degrees = 4 spins)
+                  setRotation((prev) => prev + 1440);
+                }}
+                whileHover={{ scale: 1.05 }}
+                animate={{ 
+                  rotate: rotation 
+                }}
+                transition={{ 
+                  rotate: {
+                    duration: 3.2,
+                    ease: [0.1, 1, 0.3, 1]
+                  },
+                  scale: {
+                    duration: 0.4,
+                    ease: "easeOut"
+                  }
+                }}
+                className="w-[640px] h-[640px] object-contain drop-shadow-[0_0_80px_rgba(30,91,255,0.85)] filter brightness-110 logo-glitch-effect cursor-pointer" 
               />
             </motion.div>
 

@@ -195,7 +195,7 @@ export default function Plans() {
                   <button
                     type="button"
                     onClick={handleScrollToQuote}
-                    className={`group/btn relative inline-flex items-center justify-between gap-2 w-full text-white text-[10px] font-black tracking-[0.2em] px-6 py-4.5 border border-white/10 bg-white/[0.02] overflow-hidden transition-all duration-300 rounded-none uppercase focus:outline-none`}
+                    className={`group/btn relative inline-flex items-center justify-between gap-2 w-full text-white text-[11px] font-black tracking-[0.2em] px-7 py-5 border border-white/10 bg-white/[0.02] overflow-hidden transition-all duration-300 rounded-none uppercase focus:outline-none`}
                     aria-label={`Cotar agora ${plan.type} ${plan.name}`}
                   >
                     <span className={`absolute inset-0 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 z-0 ${

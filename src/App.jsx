@@ -204,7 +204,7 @@ export default function App() {
                       exit={{ opacity: 0, scale: 0.95, y: -10 }}
                       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                       onClick={handleSystemActivation}
-                      className="px-10 py-4.5 border border-white/20 hover:border-white text-white hover:bg-white hover:text-black text-[10px] font-bold tracking-[0.3em] transition-all duration-500 active:scale-[0.98] uppercase inline-flex items-center justify-center gap-3 rounded-full cursor-pointer"
+                      className="px-10 py-5 border border-white/20 hover:border-white text-white hover:bg-white hover:text-black text-[11px] font-bold tracking-[0.3em] transition-all duration-500 active:scale-[0.98] uppercase inline-flex items-center justify-center gap-3 rounded-full cursor-pointer"
                     >
                       INICIAR APRESENTAÇÃO
                       <ArrowRight className="h-4 w-4" />

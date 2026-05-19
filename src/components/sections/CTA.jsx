@@ -150,7 +150,7 @@ export default function CTA() {
                       <button
                         type="submit"
                         onMouseEnter={playHoverSound}
-                        className="group w-full inline-flex items-center justify-between bg-primary hover:bg-primary/90 text-white text-[10px] font-black tracking-[0.2em] px-6 py-4.5 transition-all duration-300 rounded-none uppercase focus:outline-none"
+                        className="group w-full inline-flex items-center justify-between bg-primary hover:bg-primary/90 text-white text-[11px] font-black tracking-[0.2em] px-7 py-5 transition-all duration-300 rounded-none uppercase focus:outline-none"
                       >
                         CONSULTAR APÓLICE
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
