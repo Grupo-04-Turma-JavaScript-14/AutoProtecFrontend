@@ -116,10 +116,21 @@ export default function App() {
   };
 
   const handleIntroComplete = () => {
+    // Lock document scroll to discard trackpad/mousewheel inertial carryover
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
     window.scrollTo({ top: 0, left: 0 });
     setShowIntro(false);
+    
     // Auto-toggle active ambient audio in Navbar once main landing page reveals
     window.dispatchEvent(new CustomEvent("activate-audio-from-preloader"));
+
+    // Safely restore scrolling after transition has finished and inertia settles
+    setTimeout(() => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }, 850);
   };
 
   return (
