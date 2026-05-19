@@ -58,7 +58,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="mt-10 flex flex-col sm:flex-row gap-4"
+            className="mt-10 hidden lg:flex flex-col sm:flex-row gap-4"
           >
             <button
               type="button"
@@ -80,7 +80,7 @@ export default function Hero() {
         </div>
 
         {/* Right Side: Free Floating 3D Holographic Projector (Card container removed) */}
-        <div className="w-full lg:w-auto flex-1 flex justify-center lg:justify-end">
+        <div className="w-full lg:w-auto flex-1 flex flex-col items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -151,6 +151,31 @@ export default function Hero() {
               />
             </motion.div>
 
+          </motion.div>
+
+          {/* Mobile-Only CTA Buttons (rendered under the image) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            className="mt-6 flex lg:hidden flex-col sm:flex-row gap-4 w-full max-w-md px-4 relative z-20"
+          >
+            <button
+              type="button"
+              onClick={() => scrollToSection("contato")}
+              className="group w-full inline-flex items-center justify-center gap-3 bg-white text-black hover:bg-transparent hover:text-white border border-white px-10 py-5 text-[11px] font-black tracking-[0.25em] transition-all duration-300 active:scale-95 shadow-[0_4px_25px_rgba(255,255,255,0.1)] focus:outline-none"
+            >
+              FAZER COTAÇÃO
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </button>
+            
+            <button
+              type="button"
+              onClick={() => scrollToSection("seguros")}
+              className="group w-full inline-flex items-center justify-center gap-3 border border-white/10 hover:border-white/30 bg-transparent text-white text-[11px] font-black tracking-[0.25em] px-10 py-5 transition-all duration-300 active:scale-95 hover:bg-white/[0.02] focus:outline-none"
+            >
+              CONHECER PLANOS
+            </button>
           </motion.div>
         </div>
 
